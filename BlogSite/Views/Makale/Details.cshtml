@@ -1,0 +1,95 @@
+﻿@model BlogSite.ViewModels.SonAtilanMakaleViewModel
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-danger text-center">@Model.Makalem.Baslik</h2>
+
+<div>
+    <h4>@Model.Makalem.Kullanici.KullaniciAdi</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => Model.Makalem.Kategori.KategoriAdi)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => Model.Makalem.Kategori.KategoriAdi)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => Model.Makalem.Tarih)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => Model.Makalem.Tarih)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => Model.Makalem.Icerik)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => Model.Makalem.Icerik)
+        </dd>
+
+    </dl>
+</div>
+
+@if (Model.Makalem.Kullanici.KullaniciAdi == Session["username"].ToString())
+{
+    <h3>Etiketler</h3>
+    foreach (var i in Model.Makalem.Etikets.ToList())
+    {
+        @i.EtiketAdi
+    }
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Makalem.Id }) |
+        @Html.ActionLink("Etiket Ekle", "Edit", new { id = Model.Makalem.Id })
+    </p>
+}
+<hr />
+<div>
+    <textarea type="text" id="yorum"></textarea>
+    <br />
+    <button type="button" class="btn btn-info" id="YorumYap">Yorum Yap</button>
+</div>
+
+<hr />
+
+@Html.Partial("YorumListele", Model.Makalem.Yorums.ToList()) 
+
+<div class="container">
+    @foreach (var i in Model.SonMakaleler)
+    {
+        <div class="col-md-2">
+            <h2 class="text-center text-primary">@i.Baslik</h2>
+            <p>@i.Kategori.KategoriAdi</p>
+            <p>@i.Kullanici.KullaniciAdi</p>
+        </div>
+    }
+</div>
+
+@section scripts{
+        <script type="text/javascript">
+            $(function () {
+                $("#YorumYap").click(function () {
+                    var yorumumuz = $("#yorum").val();
+                    $.ajax({
+                        url: '/Makale/YorumYap',
+                        data: { yorum: yorumumuz, Makaleid:@Model.Makalem.Id},
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (data) {
+                            alert('Başarı');
+                        }
+                    });
+                });
+            });
+        </script>
+}
+
+
+
+

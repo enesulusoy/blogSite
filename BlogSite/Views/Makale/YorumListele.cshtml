@@ -1,0 +1,27 @@
+﻿@model IEnumerable<BlogSite.Models.Yorum>
+
+@foreach (var item in Model)
+{
+    @Html.DisplayFor(modelItem => item.Kullanici.KullaniciAdi)
+    <br />
+    @Html.DisplayFor(modelItem => item.YorumIcerik)
+    <br />
+    @Html.DisplayFor(modelItem => item.Tarih)
+    <br />
+    if (item.Kullanici.KullaniciAdi == Session["username"].ToString())
+    {
+        <p>
+            @Html.ActionLink("Güncelle", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Sil", "YorumDelete", new { id = item.Id })
+        </p>
+    }
+    else if (item.Makale.Kullanici.KullaniciAdi == Session["username"].ToString())
+    {
+        <p>
+            @Html.ActionLink("Sil", "YorumDelete", new { id = item.Id })
+        </p>
+    }
+    <hr />
+}
+
+
